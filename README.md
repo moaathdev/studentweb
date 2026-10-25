@@ -41,7 +41,7 @@ python app.py
 
 ---
 
-## 🚀 النشر على الإنترنت (Render)
+## 🚀 النشر على الإنترنت
 
 ### الطريقة 1: نشر يدوي
 1. ارفع المشروع إلى مستودع على GitHub (انظر قسم الرفع أدناه).
@@ -62,6 +62,27 @@ python app.py
 من Render اختر **New** → **Blueprint** ثم حدّد المستودع؛ سيقرأ إعداداته من `render.yaml`.
 
 > ملاحظة: `gunicorn` يعمل على Linux فقط (خوادم الاستضافة)، أمّا محلياً على Windows فاستخدم `python app.py`.
+
+### الطريقة 3: PythonAnywhere (مجاني بدون بطاقة)
+
+Render تطلب بطاقة للتحقّق حتى في الخطّة المجانية. البديل المجاني تماماً هو **PythonAnywhere**، لكنه لا يستخدم `gunicorn` — بل ملف WSGI:
+
+1. أنشئ حساب **Beginner (مجاني)** على [pythonanywhere.com](https://www.pythonanywhere.com).
+2. من **Consoles** افتح **Bash** ثم:
+
+   ```bash
+   git clone https://github.com/moaathdev/studentweb.git
+   mkvirtualenv --python=/usr/bin/python3.10 studentenv
+   pip install -r studentweb/requirements.txt
+   ```
+
+3. من **Web** → **Add a new web app** → **Manual configuration** → اختر نفس إصدار بايثون.
+4. في قسم **Virtualenv** اكتب مسار البيئة: `/home/<USERNAME>/.virtualenvs/studentenv`
+5. افتح رابط **WSGI configuration file**، امسح محتواه بالكامل، والصق محتوى [`deploy/pythonanywhere_wsgi.py`](deploy/pythonanywhere_wsgi.py) بعد تعديل `<USERNAME>` و`<CHANGE_ME>`.
+6. اضغط **Reload** الأخضر، ثم افتح `https://<USERNAME>.pythonanywhere.com`.
+
+> الحساب المجاني يطلب تأكيد التجديد كل 3 أشهر من صفحة **Web**، وإلا يتوقف التطبيق.
+> البيانات (`students.json` والمحاضرات) تُحفظ داخل مجلد المشروع على الخادم وتبقى بعد إعادة التشغيل.
 
 ---
 
