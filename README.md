@@ -27,87 +27,10 @@
 
 ---
 
-## ▶️ التشغيل محلياً
-
-```bash
-pip install -r requirements.txt
-python app.py
-```
-
-ثم افتح المتصفح على: `http://127.0.0.1:5000`
-
-- خيارات إضافية: `python app.py --port 8080 --no-browser`
-- ملف البيانات `students.json` ومجلّد `lectures/` يُنشآن تلقائياً بجانب `app.py`.
-
----
-
-## 🚀 النشر على الإنترنت
-
-### الطريقة 1: نشر يدوي
-1. ارفع المشروع إلى مستودع على GitHub (انظر قسم الرفع أدناه).
-2. اذهب إلى [dashboard.render.com](https://dashboard.render.com) → **New** → **Web Service**.
-3. اربط مستودع GitHub.
-4. اضبط:
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn --workers 1 --threads 8 --bind 0.0.0.0:$PORT app:app`
-   - **Health Check Path**: `/healthz`
-5. أضف متغيّرات البيئة (Environment):
-   - `SECRET_KEY` = قيمة عشوائية طويلة
-   - `ADMIN_USER` = `root`
-   - `ADMIN_PASS` = رمز أدمن قوي (لا تترك `root`)
-   - `COOKIE_SECURE` = `1`
-6. اضغط **Create Web Service**.
-
-### الطريقة 2: Blueprint (تلقائي)
-من Render اختر **New** → **Blueprint** ثم حدّد المستودع؛ سيقرأ إعداداته من `render.yaml`.
-
-> ملاحظة: `gunicorn` يعمل على Linux فقط (خوادم الاستضافة)، أمّا محلياً على Windows فاستخدم `python app.py`.
-
-### الطريقة 3: PythonAnywhere (مجاني بدون بطاقة)
-
-Render تطلب بطاقة للتحقّق حتى في الخطّة المجانية. البديل المجاني تماماً هو **PythonAnywhere**، لكنه لا يستخدم `gunicorn` — بل ملف WSGI:
-
-1. أنشئ حساب **Beginner (مجاني)** على [pythonanywhere.com](https://www.pythonanywhere.com).
-2. من **Consoles** افتح **Bash** ثم:
-
-   ```bash
-   git clone https://github.com/moaathdev/studentweb.git
-   mkvirtualenv --python=/usr/bin/python3.10 studentenv
-   pip install -r studentweb/requirements.txt
-   ```
-
-3. من **Web** → **Add a new web app** → **Manual configuration** → اختر نفس إصدار بايثون.
-4. في قسم **Virtualenv** اكتب مسار البيئة: `/home/<USERNAME>/.virtualenvs/studentenv`
-5. افتح رابط **WSGI configuration file**، امسح محتواه بالكامل، والصق محتوى [`deploy/pythonanywhere_wsgi.py`](deploy/pythonanywhere_wsgi.py) بعد تعديل `<USERNAME>` و`<CHANGE_ME>`.
-6. اضغط **Reload** الأخضر، ثم افتح `https://<USERNAME>.pythonanywhere.com`.
-
-> الحساب المجاني يطلب تأكيد التجديد كل 3 أشهر من صفحة **Web**، وإلا يتوقف التطبيق.
-> البيانات (`students.json` والمحاضرات) تُحفظ داخل مجلد المشروع على الخادم وتبقى بعد إعادة التشغيل.
-
----
-
+##
 ## ⚙️ متغيّرات البيئة
 
-| المتغيّر | الوظيفة | الافتراضي |
-|---------|---------|-----------|
-| `PORT` | منفذ التشغيل (تضبطه المنصّة تلقائياً). | `5000` |
-| `HOST` | عنوان الاستماع. | `0.0.0.0` عند ضبط `PORT`، وإلا `127.0.0.1` |
-| `SECRET_KEY` | مفتاح توقيع الجلسات. | يُولَّد ويُحفظ في `.secret_key` |
-| `ADMIN_USER` | اسم مستخدم الأدمن. | `root` |
-| `ADMIN_PASS` | رمز الأدمن. | `root` |
-| `COOKIE_SECURE` | اجعلها `1` عند التشغيل عبر HTTPS. | معطّل |
-| `DATA_DIR` | مسار مجلد البيانات (`students.json` و`lectures`). | بجانب `app.py` |
-
----
-
-## ⚠️ تنبيهات مهمة
-
-- **غيّر رمز الأدمن** (`ADMIN_PASS`) قبل النشر؛ لا تترك `root`.
-- على الخطط المجانية يكون نظام الملفات **مؤقتاً**: تُفقد `students.json` والمحاضرات عند كل إعادة نشر. للحفاظ عليها فعّل **قرصاً دائماً (Persistent Disk)** واضبط `DATA_DIR` على مساره (مثل `/data`).
-- **لا ترفع `students.json`** إلى مستودع عام؛ فهو يحتوي أسماء ورموز الطلاب. وهو مُستثنى مسبقاً في `.gitignore`.
-- لتشغيل عدّة عمّال (workers) بشكل آمن مع ملفات JSON، استخدم **عامل واحد** مع عدّة خيوط: `--workers 1 --threads 8`.
-
----
+| المتغيّر | الوظيفة | الافتراضي 
 
 ## 🔐 الحسابات
 
